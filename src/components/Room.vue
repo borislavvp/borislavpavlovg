@@ -118,8 +118,8 @@ function addTornadoItem(mesh) {
 
 function loadItem(itemName, scalar=1){
     loader.load(`/items/${itemName}.glb`, (gltf) => {
-    const rep = Math.random()*10
-    qrTexture.repeat.set(rep, rep)
+    const rep = Math.random()*10 
+    qrTexture.repeat.set(rep, rep+1)
     const item = gltf.scene
     item.scale.setScalar(scalar)
     item.position.set(0, 0, 0)
@@ -132,6 +132,7 @@ function loadItem(itemName, scalar=1){
     scene.add(item);    
   });
 }
+
 let sheepMixer = null
 function loadSheepItem(scalar=1){
    loader.load(`/items/sheep3.glb`, (gltf) => {
@@ -332,8 +333,8 @@ function startAnimation(){
     .then(() =>  moveTo(new THREE.Vector3(-1.2, 1, -3.7), 3000))
     .then(() => lookAtSmooth(new THREE.Vector3(1, -3, 1), 20000))
     .then(() =>  moveTo(new THREE.Vector3(-1.2, 1, -1.5), 3000))
-    .then(() => lookAtSmooth(new THREE.Vector3(-1.3, 1, -2), 2000)) //
-    .then(() => lookAtSmooth(new THREE.Vector3(-1.1, -3, -1.5), 20000))
+    .then(() => lookAtSmooth(new THREE.Vector3(-1.35, 1, -2), 2000)) //
+    .then(() => lookAtSmooth(new THREE.Vector3(-1.10, -3, -1.5), 20000))
     .then(() => moveTo(new THREE.Vector3(0, 5, -0.6), 10000))//
     .then(() => lookAtSmooth(new THREE.Vector3(0, 0, 0), 10000))
     .then(() => lookAtSmooth(new THREE.Vector3(-1, -1, -3), 2000))
@@ -420,8 +421,9 @@ function createRoom() {
   backWall = new THREE.Mesh(
     new THREE.PlaneGeometry(roomWidth, wallHeight, 200, 200),
     baseMat
-  )
-  backWall.position.set(0, wallHeight / 2 + floorY, roomDepth / 2 + 2)
+  );
+  backWall.rotation.y = Math.PI;           // 🔁 face inward
+  backWall.position.set(0, wallHeight / 2 + floorY, roomDepth / 2); // no extra offset
   // ----------------------------
   // Spiral Shader
   // ----------------------------
@@ -636,12 +638,12 @@ function createRoom() {
   loadItem("frame", 0.09)
   loadItem("shoe", 0.02)
   loadItem("shoe", 0.02)
-  loadItem("cake", 0.13)
+  // loadItem("cake", 0.13)
   loadItem("table", 0.13)
   loadItem("baloon", 0.23)
   loadItem("umbrella", 0.1)
   loadItem("flowers", 1)
-  // loadSheepItem(1.5)
+  loadSheepItem(1.5)
 
   setTimeout(() => {
     startAnimation();
