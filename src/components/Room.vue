@@ -644,8 +644,8 @@ function createRoom() {
   // loadSheepItem(1.5)
 
   setTimeout(() => {
-    // startAnimation();
-  }, 5000);
+    startAnimation();
+  }, 20000);
 }
 
 function createCableTornado(roomWidth, roomDepth, wallHeight, floorY) {
