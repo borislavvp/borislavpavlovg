@@ -120,7 +120,7 @@ function addTornadoItem(mesh) {
 
 function loadItem(itemName, scalar=1){
     loader.load(`/items/${itemName}.glb`, (gltf) => {
-    const rep = Math.random()*10 - 6 
+    const rep = Math.random()*10 -7 
     qrTexture.repeat.set(rep, rep)
     const item = gltf.scene
     item.scale.setScalar(scalar)
@@ -328,13 +328,13 @@ function startAnimation(){
     moveTo(new THREE.Vector3(-1.8, 1.0, -5.1), 5000)
     .then(() => lookAtSmooth(new THREE.Vector3(-1.3, -1.6, -3), 2000))
     .then(() =>  moveTo(new THREE.Vector3(-1.3, 0.6, -4.4), 3000))
-    .then(() =>  moveTo(new THREE.Vector3(-1.2, -0.6, -4.7), 3000))
+    .then(() =>  moveTo(new THREE.Vector3(-1.2, -0.6, -4.7), 1000))
     .then(() => lookAtSmooth(new THREE.Vector3(-1.2, -0.2, -3), 2000))
-    .then(() => lookAtSmooth(new THREE.Vector3(-2.0, -0.2, -3), 3000))
+    .then(() => lookAtSmooth(new THREE.Vector3(-2.0, -0.2, -3), 2000))
     .then(() => lookAtSmooth(new THREE.Vector3(-1.2, -0.2, -3), 2000))
-    .then(() => lookAtSmooth(new THREE.Vector3(-0.7, 1.5, -3), 5000))
+    .then(() => lookAtSmooth(new THREE.Vector3(-0.7, 1.5, -3), 2000))
     .then(() =>  moveTo(new THREE.Vector3(-1.2, 1, -3.7), 3000))
-    .then(() => lookAtSmooth(new THREE.Vector3(1, -3, 1), 20000))
+    .then(() => lookAtSmooth(new THREE.Vector3(1, -3, 1), 10000))
     .then(() =>  moveTo(new THREE.Vector3(-1.2, 1, -1.5), 3000))
     .then(() => lookAtSmooth(new THREE.Vector3(-1.35, 1, -2), 2000)) //
     .then(() => lookAtSmooth(new THREE.Vector3(-1.10, -3, -1.5), 20000))
