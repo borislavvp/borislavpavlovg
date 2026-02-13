@@ -111,15 +111,17 @@ function addTornadoItem(mesh) {
     spinFreq: 0.2 + Math.random() /0.5,
     spinAxisSeed: Math.random() * 100,
     // Starting angle
-    angleOffset: Math.random() * Math.PI * 2
+    angleOffset: Math.random() * Math.PI * 2,
+    collisionRadius: 0.3, // approximate size
+    velocity: new THREE.Vector3()
   };
   tornadoItems.push(item);
 }
 
 function loadItem(itemName, scalar=1){
     loader.load(`/items/${itemName}.glb`, (gltf) => {
-    const rep = Math.random()*10 
-    qrTexture.repeat.set(rep, rep+1)
+    const rep = Math.random()*10 - 6 
+    qrTexture.repeat.set(rep, rep)
     const item = gltf.scene
     item.scale.setScalar(scalar)
     item.position.set(0, 0, 0)
@@ -324,10 +326,11 @@ function startAnimation(){
   camera.lookAt(-2, -2, -3) ////start
   setTimeout(() => {
     moveTo(new THREE.Vector3(-1.8, 1.0, -5.1), 5000)
-    .then(() => lookAtSmooth(new THREE.Vector3(-1.3, -2, -3), 2000))
+    .then(() => lookAtSmooth(new THREE.Vector3(-1.3, -1.6, -3), 2000))
+    .then(() =>  moveTo(new THREE.Vector3(-1.3, 0.6, -4.4), 3000))
     .then(() =>  moveTo(new THREE.Vector3(-1.2, -0.6, -4.7), 3000))
     .then(() => lookAtSmooth(new THREE.Vector3(-1.2, -0.2, -3), 2000))
-    .then(() => lookAtSmooth(new THREE.Vector3(-2.0, -0.2, -3), 5000))
+    .then(() => lookAtSmooth(new THREE.Vector3(-2.0, -0.2, -3), 3000))
     .then(() => lookAtSmooth(new THREE.Vector3(-1.2, -0.2, -3), 2000))
     .then(() => lookAtSmooth(new THREE.Vector3(-0.7, 1.5, -3), 5000))
     .then(() =>  moveTo(new THREE.Vector3(-1.2, 1, -3.7), 3000))
@@ -424,6 +427,7 @@ function createRoom() {
   );
   backWall.rotation.y = Math.PI;           // 🔁 face inward
   backWall.position.set(0, wallHeight / 2 + floorY, roomDepth / 2); // no extra offset
+
   // ----------------------------
   // Spiral Shader
   // ----------------------------
@@ -797,6 +801,7 @@ function animate(time) {
     // item.mesh.rotation.z = Math.sin(elapsedTime * item.spinSpeed * 0.7) * 0.5;
     // item.mesh.rotateOnWorldAxis(item.spinAxis, item.spinSpeed * elapsedTime);
   });
+  
   renderer.render(scene, camera)
 }
 // ----------------------------
