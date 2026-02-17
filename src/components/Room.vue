@@ -7,9 +7,11 @@ import { ref, onMounted, onBeforeUnmount } from "vue"
 import * as THREE from "three"
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js'
+
 const clock = new THREE.Clock();
 let scene, camera, renderer, animationId, flyingChair, workoutMixer, readingMixer
-let floor, leftWall, rightWall, frontWall, backWall, currentAction
+let floor, leftWall, rightWall, frontWall, backWall, currentAction, controls
 const spiralConfig = {
   speed1: 11.0,          // speed of first spiral
   speed2: 2.0,          // speed of second spiral
@@ -23,9 +25,10 @@ const spiralConfig = {
 const tornadoConfig = {
   numLines: 100,
   speed: 1.0,
-  radius: 0.6,
+  radius: 1.6,
   height: 6.5
 }
+
 
 const container = ref(null)
 const loader = new GLTFLoader();
@@ -42,6 +45,7 @@ qrTexture.repeat.set(8, 8) // controls how many QR codes appear
 const qrMaterial = new THREE.MeshBasicMaterial({
   map: qrTexture
 })
+
 
 function loadCharacter() {
   fbxLoader.load("/character/person3.fbx", (character) => {
@@ -324,19 +328,23 @@ function updateCameraActions(time) {
 function startAnimation(){
   camera.position.set(-1.5, 0.6, -6.2)
   camera.lookAt(-2, -2, -3) ////start
+  
+  camera.position.set(-1.5, 0.6, -6.2)
+  camera.lookAt(-2, -2, -3) ////start
   setTimeout(() => {
     moveTo(new THREE.Vector3(-1.8, 1.0, -5.1), 5000)
     .then(() => lookAtSmooth(new THREE.Vector3(-1.3, -1.6, -3), 2000))
-    .then(() =>  moveTo(new THREE.Vector3(-1.3, 0.6, -4.4), 3000))
-    .then(() =>  moveTo(new THREE.Vector3(-1.2, -0.6, -4.7), 1000))
-    .then(() => lookAtSmooth(new THREE.Vector3(-1.2, -0.2, -3), 2000))
-    .then(() => lookAtSmooth(new THREE.Vector3(-2.0, -0.2, -3), 2000))
-    .then(() => lookAtSmooth(new THREE.Vector3(-1.2, -0.2, -3), 2000))
-    .then(() => lookAtSmooth(new THREE.Vector3(-0.7, 1.5, -3), 2000))
-    .then(() =>  moveTo(new THREE.Vector3(-1.2, 1, -3.7), 3000))
-    .then(() => lookAtSmooth(new THREE.Vector3(1, -3, 1), 10000))
-    .then(() =>  moveTo(new THREE.Vector3(-1.2, 1, -1.5), 3000))
-    .then(() => lookAtSmooth(new THREE.Vector3(-1.35, 1, -2), 2000)) //
+    .then(() =>  moveTo(new THREE.Vector3(-1.3, 0.6, -4.4), 1000))
+    // .then(() =>  moveTo(new THREE.Vector3(-1.2, -0.6, -4.7), 1000))
+    .then(() => lookAtSmooth(new THREE.Vector3(-1.2, -0.2, -3), 1000))
+    .then(() => lookAtSmooth(new THREE.Vector3(-2.0, -0.2, -3), 3000))
+    .then(() => lookAtSmooth(new THREE.Vector3(-1.2, -0.2, -3), 1000))
+    .then(() => setTimeout(() => 
+        lookAtSmooth(new THREE.Vector3(-0.7, 1.5, -3), 5000),1000))
+    .then(() =>  moveTo(new THREE.Vector3(-1.2, 1, -3.7), 5000))
+    .then(() => lookAtSmooth(new THREE.Vector3(1, -3, 1), 5000))
+    .then(() =>  moveTo(new THREE.Vector3(-1.2, 1, -1.5), 10000))
+    .then(() => lookAtSmooth(new THREE.Vector3(-1.35, 1, -2), 1000)) //
     .then(() => lookAtSmooth(new THREE.Vector3(-1.10, -3, -1.5), 20000))
     .then(() => moveTo(new THREE.Vector3(0, 5, -0.6), 10000))//
     .then(() => lookAtSmooth(new THREE.Vector3(0, 0, 0), 10000))
@@ -367,13 +375,32 @@ function createRoom() {
   const height = container.value.clientHeight
 
   camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100)
-  camera.position.set(0, 3, 6)
-  camera.lookAt(0, 0, 0) ////test
+  // camera.position.set(0, 3, 6)
+  // camera.lookAt(0, 0, 0) ////test
+  camera.position.set(-1.6335814969432545,1.3250693621620364, 0.5519423258747794)
+  camera.rotation.set(-0.4636476090008062, 0, 0) ////test
   
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(width, height)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  
+  
+renderer.domElement.addEventListener('mousedown', (e) => {
+  isDragging = true
+  const p = getPoint(e)
+  lastX = p.x
+  lastY = p.y
+})
+
+renderer.domElement.addEventListener('touchstart', (e) => {
+  isDragging = true
+  const p = getPoint(e)
+  lastX = p.x
+  lastY = p.y
+}, { passive: false })
+
   container.value.appendChild(renderer.domElement)
+  controls = new PointerLockControls(camera, document.body)
 
   const baseMat = new THREE.MeshStandardMaterial({
     color: 0x000000,
@@ -615,6 +642,10 @@ function createRoom() {
     `,
     transparent: true
   })
+
+  
+  scene.add(controls.getObject())
+
   scene.add(floor)
   scene.add(leftWall)
   scene.add(rightWall)
@@ -649,9 +680,9 @@ function createRoom() {
   loadItem("flowers", 1)
   loadSheepItem(1.5)
 
-  setTimeout(() => {
-    startAnimation();
-  }, 20000);
+  // setTimeout(() => {
+  //   startAnimation();
+  // }, 20000);
 }
 
 function createCableTornado(roomWidth, roomDepth, wallHeight, floorY) {
@@ -739,13 +770,52 @@ function createCableTornado(roomWidth, roomDepth, wallHeight, floorY) {
   scene.add(centralCable)
 }
 
-// ----------------------------
-// Animation tweak for tornado
-// ----------------------------
+
+
+/* -------------------- INPUT HELPERS -------------------- */
+function getPoint(e) {
+  if (e.touches) {
+    return { x: e.touches[0].clientX, y: e.touches[0].clientY }
+  }
+  return { x: e.clientX, y: e.clientY }
+}
+
+
+/* -------------------- MOVEMENT -------------------- */
+const keys = {}
+
+window.addEventListener('keydown', (e) => keys[e.code] = true)
+window.addEventListener('keyup', (e) => keys[e.code] = false)
+
+
 function animate(time) {
   animationId = requestAnimationFrame(animate)
   const delta = clock.getDelta();
   const elapsedTime = time * 0.001
+
+  const move = new THREE.Vector3()
+
+  // View-relative movement
+  if (keys['KeyW']) move.z -= 1
+  if (keys['KeyS']) move.z += 1
+  if (keys['KeyA']) move.x -= 1
+  if (keys['KeyD']) move.x += 1
+
+  // Vertical movement
+  if (keys['Space']) move.y += 1
+  if (keys['ShiftLeft'] || keys['ShiftRight']) move.y -= 1
+  if (keys['ArrowDown']) camera.rotation.x -= 0.0119
+  if (keys['ArrowUp']) camera.rotation.x += 0.0119
+  if (keys['ArrowLeft']) camera.rotation.y += 0.0119
+  if (keys['ArrowRight']) camera.rotation.y -= 0.0119
+
+  move.normalize()
+  // console.log(camera)
+  
+  camera.position.addScaledVector(move, 1 * delta)
+  // camera.rotation.order = 'YXZ'
+  // camera.rotation.y = yaw
+  // camera.rotation.x = pitch
   // Spiral update
   updateCameraActions(time)
   if(sheepMixer) sheepMixer.update(0.03)
