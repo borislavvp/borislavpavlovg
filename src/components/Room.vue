@@ -25,7 +25,7 @@ const spiralConfig = {
 const tornadoConfig = {
   numLines: 100,
   speed: 1.0,
-  radius: 1.6,
+  radius: 2.6,
   height: 6.5
 }
 
@@ -129,6 +129,7 @@ function loadItem(itemName, scalar=1){
     const item = gltf.scene
     item.scale.setScalar(scalar)
     item.position.set(0, 0, 0)
+    // item.rotation.set(0, 1, 0)
     item.traverse((child) => {
       if (child.isMesh) {
         child.material = qrMaterial
@@ -355,6 +356,11 @@ function startAnimation(){
   }, 5000);
 }
 
+function startAni(){
+  // moveTo(new THREE.Vector3( 0.09849695171275794, -0.12471132283434143, -0.9135199248737168),2000)
+  // // .then(() => moveTo(new THREE.Vector3(0.09,-0.11, -0.89),5000))
+  // .then(() => setTimeout(() => startAni(),2000))
+}
 function createRoom() {
   // ----------------------------
   // Scene & Camera
@@ -379,8 +385,8 @@ function createRoom() {
   // camera.lookAt(0, 0, 0) ////test
   // camera.position.set(-1.6335814969432545,1.3250693621620364, 0.5519423258747794)
   // camera.rotation.set(-0.4636476090008062, 0, 0) ////test
-  camera.position.set( 0.5180336647674679, 0.724688677171619, -7.088953520832297)
-  camera.rotation.set( -0.17804760900080582, 2.546599999999994, 0) ////test
+  camera.position.set(  -0.0005030482872420139,-1.0607113228045386,-1.094319924855835)
+  camera.rotation.set( -1.498947609000808, 3.141599999999984, 0) ////test
   
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(width, height)
@@ -673,6 +679,7 @@ renderer.domElement.addEventListener('touchstart', (e) => {
   // loadItem("egg_cover", 2.04)
   loadItem("polaroid", 0.01)
   loadItem("frame", 0.09)
+  // loadItem("radio1", 2.29)
   loadItem("shoe", 0.02)
   loadItem("shoe", 0.02)
   // loadItem("cake", 0.13)
@@ -685,6 +692,7 @@ renderer.domElement.addEventListener('touchstart', (e) => {
   // setTimeout(() => {
   //   startAnimation();
   // }, 20000);
+  startAni()
 }
 
 function createCableTornado(roomWidth, roomDepth, wallHeight, floorY) {
