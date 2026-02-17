@@ -25,7 +25,7 @@ const spiralConfig = {
 const tornadoConfig = {
   numLines: 100,
   speed: 1.0,
-  radius: 2.6,
+  radius: 1.6,
   height: 6.5
 }
 
@@ -385,8 +385,8 @@ function createRoom() {
   // camera.lookAt(0, 0, 0) ////test
   // camera.position.set(-1.6335814969432545,1.3250693621620364, 0.5519423258747794)
   // camera.rotation.set(-0.4636476090008062, 0, 0) ////test
-  camera.position.set(  -0.0005030482872420139,-1.0607113228045386,-1.094319924855835)
-  camera.rotation.set( -1.498947609000808, 3.141599999999984, 0) ////test
+  camera.position.set(0.08859743138278832,-0.5231910887192948, -1.3989406386111056)
+  camera.rotation.set( -1.6417476090008083, 6.35459999999993, 0) ////test
   
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(width, height)
@@ -793,6 +793,18 @@ function getPoint(e) {
 
 /* -------------------- MOVEMENT -------------------- */
 const keys = {}
+
+// When on phone touches and holds - it goes up like space, if it touches two times it goes down
+window.addEventListener('touchstart', (e) => {
+  if (e.touches.length === 1) {
+    if(!keys['Space'] && !keys['ShiftRight']){
+      keys['Space'] = true
+    }else{
+      keys['ShiftRight'] = !keys['ShiftRight']
+      keys['Space'] = !keys['Space']
+    }
+  } 
+}, { passive: false })
 
 window.addEventListener('keydown', (e) => keys[e.code] = true)
 window.addEventListener('keyup', (e) => keys[e.code] = false)
