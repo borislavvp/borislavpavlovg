@@ -381,12 +381,12 @@ function createRoom() {
   const height = container.value.clientHeight
 
   camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100)
-  // camera.position.set(0, 3, 6)
-  // camera.lookAt(0, 0, 0) ////test
+  camera.position.set(0, 3, 6)
+  camera.lookAt(0, 0, 0) ////test
   // camera.position.set(-1.6335814969432545,1.3250693621620364, 0.5519423258747794)
   // camera.rotation.set(-0.4636476090008062, 0, 0) ////test
-  camera.position.set(0.08859743138278832,-0.5231910887192948, -1.3989406386111056)
-  camera.rotation.set( -1.6417476090008083, 6.295099999999931, 0) ////test
+  // camera.position.set(0.08859743138278832,-0.5231910887192948, -1.3989406386111056)
+  // camera.rotation.set( -1.6417476090008083, 6.295099999999931, 0) ////test
   
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(width, height)
